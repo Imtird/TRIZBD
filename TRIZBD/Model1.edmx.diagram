@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="82361940cc5f48279863a1e69494a41e" Name="Diagram1">
+        <EntityTypeShape EntityType="EventsModel.Event" Width="1.5" PointX="3" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.Event_type" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.Feedback" Width="1.5" PointX="5.25" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.Location" Width="1.5" PointX="0.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.Organizer" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.Participant" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.Registration" Width="1.5" PointX="5.25" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.vw_ActiveParticipants" Width="1.5" PointX="0.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.vw_EventRatings" Width="1.5" PointX="7.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.vw_LowRatedEvents" Width="1.5" PointX="7.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.vw_OrganizersWithEvents" Width="1.5" PointX="9.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EventsModel.vw_UpcomingEventsWithParticipants" Width="1.5" PointX="9.75" PointY="4.5" IsExpanded="true" />
+        <AssociationConnector Association="EventsModel.FK__Event__Id_event___412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsModel.FK__Event__Id_locati__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsModel.FK__Feedback__Id_eve__4D94879B" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsModel.FK__Registrat__Id_ev__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsModel.FK__Feedback__Id_par__4E88ABD4" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsModel.FK__Registrat__Id_pa__49C3F6B7" ManuallyRouted="false" />
+        <AssociationConnector Association="EventsModel.EV_org" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,1005 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище EventsModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="EV_org">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="Id_organizer" />
+          </Key>
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="Id_organizer" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="Id_event" />
+          </Key>
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Id_location" Type="int" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="200" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="Id_event_type" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Event_type">
+          <Key>
+            <PropertyRef Name="Id_event_type" />
+          </Key>
+          <Property Name="Id_event_type" Type="int" Nullable="false" />
+          <Property Name="type_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Feedback">
+          <Key>
+            <PropertyRef Name="Id_feedback" />
+          </Key>
+          <Property Name="Id_feedback" Type="int" Nullable="false" />
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="Id_participant" Type="int" Nullable="false" />
+          <Property Name="rating" Type="int" />
+          <Property Name="comment" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="Id_location" />
+          </Key>
+          <Property Name="Id_location" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="address" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Organizer">
+          <Key>
+            <PropertyRef Name="Id_organizer" />
+          </Key>
+          <Property Name="Id_organizer" Type="int" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="last_name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="position" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Participant">
+          <Key>
+            <PropertyRef Name="Id_participant" />
+          </Key>
+          <Property Name="Id_participant" Type="int" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="last_name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="status" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="Id_participant" />
+          </Key>
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="Id_participant" Type="int" Nullable="false" />
+          <Property Name="registration_date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Events.dbo.vw_ActiveParticipants" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vw_ActiveParticipants">
+          <Key>
+            <PropertyRef Name="Id_participant" />
+            <PropertyRef Name="participant_name" />
+          </Key>
+          <Property Name="Id_participant" Type="int" Nullable="false" />
+          <Property Name="participant_name" Type="nvarchar" MaxLength="41" Nullable="false" />
+          <Property Name="phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="events_attended" Type="int" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Events.dbo.vw_EventRatings" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vw_EventRatings">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="event_name" />
+          </Key>
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="event_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="average_rating" Type="int" />
+          <Property Name="feedback_count" Type="int" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Events.dbo.vw_LowRatedEvents" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vw_LowRatedEvents">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="event_name" />
+            <PropertyRef Name="date" />
+          </Key>
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="event_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="average_rating" Type="int" />
+          <Property Name="feedback_count" Type="int" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Events.dbo.vw_OrganizersWithEvents" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vw_OrganizersWithEvents">
+          <Key>
+            <PropertyRef Name="Id_organizer" />
+            <PropertyRef Name="organizer_name" />
+          </Key>
+          <Property Name="Id_organizer" Type="int" Nullable="false" />
+          <Property Name="organizer_name" Type="nvarchar" MaxLength="41" Nullable="false" />
+          <Property Name="position" Type="nvarchar" MaxLength="20" />
+          <Property Name="events_count" Type="int" />
+          <Property Name="event_names" Type="nvarchar" MaxLength="4000" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Events.dbo.vw_UpcomingEventsWithParticipants" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vw_UpcomingEventsWithParticipants">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="event_name" />
+            <PropertyRef Name="date" />
+            <PropertyRef Name="location" />
+            <PropertyRef Name="event_type" />
+          </Key>
+          <Property Name="Id_event" Type="int" Nullable="false" />
+          <Property Name="event_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="location" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="event_type" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="participants_count" Type="int" />
+        </EntityType>
+        <Association Name="FK__EV_org__Id_event__440B1D61">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EV_org" Type="Self.EV_org" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id_event" />
+            </Principal>
+            <Dependent Role="EV_org">
+              <PropertyRef Name="Id_event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EV_org__Id_organ__44FF419A">
+          <End Role="Organizer" Type="Self.Organizer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EV_org" Type="Self.EV_org" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizer">
+              <PropertyRef Name="Id_organizer" />
+            </Principal>
+            <Dependent Role="EV_org">
+              <PropertyRef Name="Id_organizer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Event__Id_event___412EB0B6">
+          <End Role="Event_type" Type="Self.Event_type" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event_type">
+              <PropertyRef Name="Id_event_type" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="Id_event_type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Event__Id_locati__403A8C7D">
+          <End Role="Location" Type="Self.Location" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="Id_location" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="Id_location" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Feedback__Id_eve__4D94879B">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id_event" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="Id_event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Feedback__Id_par__4E88ABD4">
+          <End Role="Participant" Type="Self.Participant" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participant">
+              <PropertyRef Name="Id_participant" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="Id_participant" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Registrat__Id_ev__48CFD27E">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id_event" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="Id_event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Registrat__Id_pa__49C3F6B7">
+          <End Role="Participant" Type="Self.Participant" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participant">
+              <PropertyRef Name="Id_participant" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="Id_participant" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_AddFeedback" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+          <Parameter Name="ParticipantId" Type="int" Mode="In" />
+          <Parameter Name="Rating" Type="int" Mode="In" />
+          <Parameter Name="Comment" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_CancelEvent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+          <Parameter Name="Reason" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GenerateAttendanceReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartDate" Type="date" Mode="In" />
+          <Parameter Name="EndDate" Type="date" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_RegisterParticipant" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ParticipantId" Type="int" Mode="In" />
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchEvents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EventTypeId" Type="int" Mode="In" />
+          <Parameter Name="StartDate" Type="date" Mode="In" />
+          <Parameter Name="EndDate" Type="date" Mode="In" />
+          <Parameter Name="LocationId" Type="int" Mode="In" />
+          <Parameter Name="OrganizerId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="Хранилище EventsModelContainer">
+          <EntitySet Name="EV_org" EntityType="Self.EV_org" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Event_type" EntityType="Self.Event_type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Feedback" EntityType="Self.Feedback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Organizer" EntityType="Self.Organizer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Participant" EntityType="Self.Participant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Registration" EntityType="Self.Registration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vw_ActiveParticipants" EntityType="Self.vw_ActiveParticipants" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_ActiveParticipants].[Id_participant] AS [Id_participant], 
+    [vw_ActiveParticipants].[participant_name] AS [participant_name], 
+    [vw_ActiveParticipants].[phone] AS [phone], 
+    [vw_ActiveParticipants].[events_attended] AS [events_attended]
+    FROM [dbo].[vw_ActiveParticipants] AS [vw_ActiveParticipants]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_EventRatings" EntityType="Self.vw_EventRatings" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_EventRatings].[Id_event] AS [Id_event], 
+    [vw_EventRatings].[event_name] AS [event_name], 
+    [vw_EventRatings].[average_rating] AS [average_rating], 
+    [vw_EventRatings].[feedback_count] AS [feedback_count]
+    FROM [dbo].[vw_EventRatings] AS [vw_EventRatings]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_LowRatedEvents" EntityType="Self.vw_LowRatedEvents" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_LowRatedEvents].[Id_event] AS [Id_event], 
+    [vw_LowRatedEvents].[event_name] AS [event_name], 
+    [vw_LowRatedEvents].[date] AS [date], 
+    [vw_LowRatedEvents].[average_rating] AS [average_rating], 
+    [vw_LowRatedEvents].[feedback_count] AS [feedback_count]
+    FROM [dbo].[vw_LowRatedEvents] AS [vw_LowRatedEvents]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_OrganizersWithEvents" EntityType="Self.vw_OrganizersWithEvents" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_OrganizersWithEvents].[Id_organizer] AS [Id_organizer], 
+    [vw_OrganizersWithEvents].[organizer_name] AS [organizer_name], 
+    [vw_OrganizersWithEvents].[position] AS [position], 
+    [vw_OrganizersWithEvents].[events_count] AS [events_count], 
+    [vw_OrganizersWithEvents].[event_names] AS [event_names]
+    FROM [dbo].[vw_OrganizersWithEvents] AS [vw_OrganizersWithEvents]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_UpcomingEventsWithParticipants" EntityType="Self.vw_UpcomingEventsWithParticipants" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_UpcomingEventsWithParticipants].[Id_event] AS [Id_event], 
+    [vw_UpcomingEventsWithParticipants].[event_name] AS [event_name], 
+    [vw_UpcomingEventsWithParticipants].[date] AS [date], 
+    [vw_UpcomingEventsWithParticipants].[location] AS [location], 
+    [vw_UpcomingEventsWithParticipants].[event_type] AS [event_type], 
+    [vw_UpcomingEventsWithParticipants].[participants_count] AS [participants_count]
+    FROM [dbo].[vw_UpcomingEventsWithParticipants] AS [vw_UpcomingEventsWithParticipants]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__EV_org__Id_event__440B1D61" Association="Self.FK__EV_org__Id_event__440B1D61">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="EV_org" EntitySet="EV_org" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EV_org__Id_organ__44FF419A" Association="Self.FK__EV_org__Id_organ__44FF419A">
+            <End Role="Organizer" EntitySet="Organizer" />
+            <End Role="EV_org" EntitySet="EV_org" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Event__Id_event___412EB0B6" Association="Self.FK__Event__Id_event___412EB0B6">
+            <End Role="Event_type" EntitySet="Event_type" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Event__Id_locati__403A8C7D" Association="Self.FK__Event__Id_locati__403A8C7D">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Feedback__Id_eve__4D94879B" Association="Self.FK__Feedback__Id_eve__4D94879B">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Feedback__Id_par__4E88ABD4" Association="Self.FK__Feedback__Id_par__4E88ABD4">
+            <End Role="Participant" EntitySet="Participant" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Registrat__Id_ev__48CFD27E" Association="Self.FK__Registrat__Id_ev__48CFD27E">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Registrat__Id_pa__49C3F6B7" Association="Self.FK__Registrat__Id_pa__49C3F6B7">
+            <End Role="Participant" EntitySet="Participant" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EventsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="Id_event" />
+          </Key>
+          <Property Name="Id_event" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id_location" Type="Int32" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Id_event_type" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Event_type" Relationship="Self.FK__Event__Id_event___412EB0B6" FromRole="Event" ToRole="Event_type" />
+          <NavigationProperty Name="Location" Relationship="Self.FK__Event__Id_locati__403A8C7D" FromRole="Event" ToRole="Location" />
+          <NavigationProperty Name="Feedback" Relationship="Self.FK__Feedback__Id_eve__4D94879B" FromRole="Event" ToRole="Feedback" />
+          <NavigationProperty Name="Registration" Relationship="Self.FK__Registrat__Id_ev__48CFD27E" FromRole="Event" ToRole="Registration" />
+          <NavigationProperty Name="Organizer" Relationship="Self.EV_org" FromRole="Event" ToRole="Organizer" />
+        </EntityType>
+        <EntityType Name="Event_type">
+          <Key>
+            <PropertyRef Name="Id_event_type" />
+          </Key>
+          <Property Name="Id_event_type" Type="Int32" Nullable="false" />
+          <Property Name="type_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="Self.FK__Event__Id_event___412EB0B6" FromRole="Event_type" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="Feedback">
+          <Key>
+            <PropertyRef Name="Id_feedback" />
+          </Key>
+          <Property Name="Id_feedback" Type="Int32" Nullable="false" />
+          <Property Name="Id_event" Type="Int32" Nullable="false" />
+          <Property Name="Id_participant" Type="Int32" Nullable="false" />
+          <Property Name="rating" Type="Int32" />
+          <Property Name="comment" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Event" Relationship="Self.FK__Feedback__Id_eve__4D94879B" FromRole="Feedback" ToRole="Event" />
+          <NavigationProperty Name="Participant" Relationship="Self.FK__Feedback__Id_par__4E88ABD4" FromRole="Feedback" ToRole="Participant" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="Id_location" />
+          </Key>
+          <Property Name="Id_location" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="Self.FK__Event__Id_locati__403A8C7D" FromRole="Location" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="Organizer">
+          <Key>
+            <PropertyRef Name="Id_organizer" />
+          </Key>
+          <Property Name="Id_organizer" Type="Int32" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="position" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Event" Relationship="Self.EV_org" FromRole="Organizer" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="Participant">
+          <Key>
+            <PropertyRef Name="Id_participant" />
+          </Key>
+          <Property Name="Id_participant" Type="Int32" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Feedback" Relationship="Self.FK__Feedback__Id_par__4E88ABD4" FromRole="Participant" ToRole="Feedback" />
+          <NavigationProperty Name="Registration" Relationship="Self.FK__Registrat__Id_pa__49C3F6B7" FromRole="Participant" ToRole="Registration" />
+        </EntityType>
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="Id_participant" />
+          </Key>
+          <Property Name="Id_event" Type="Int32" Nullable="false" />
+          <Property Name="Id_participant" Type="Int32" Nullable="false" />
+          <Property Name="registration_date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Event" Relationship="Self.FK__Registrat__Id_ev__48CFD27E" FromRole="Registration" ToRole="Event" />
+          <NavigationProperty Name="Participant" Relationship="Self.FK__Registrat__Id_pa__49C3F6B7" FromRole="Registration" ToRole="Participant" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="vw_ActiveParticipants">
+          <Key>
+            <PropertyRef Name="Id_participant" />
+            <PropertyRef Name="participant_name" />
+          </Key>
+          <Property Name="Id_participant" Type="Int32" Nullable="false" />
+          <Property Name="participant_name" Type="String" MaxLength="41" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="events_attended" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vw_EventRatings">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="event_name" />
+          </Key>
+          <Property Name="Id_event" Type="Int32" Nullable="false" />
+          <Property Name="event_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="average_rating" Type="Int32" />
+          <Property Name="feedback_count" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vw_LowRatedEvents">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="event_name" />
+            <PropertyRef Name="date" />
+          </Key>
+          <Property Name="Id_event" Type="Int32" Nullable="false" />
+          <Property Name="event_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="average_rating" Type="Int32" />
+          <Property Name="feedback_count" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vw_OrganizersWithEvents">
+          <Key>
+            <PropertyRef Name="Id_organizer" />
+            <PropertyRef Name="organizer_name" />
+          </Key>
+          <Property Name="Id_organizer" Type="Int32" Nullable="false" />
+          <Property Name="organizer_name" Type="String" MaxLength="41" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="position" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="events_count" Type="Int32" />
+          <Property Name="event_names" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="vw_UpcomingEventsWithParticipants">
+          <Key>
+            <PropertyRef Name="Id_event" />
+            <PropertyRef Name="event_name" />
+            <PropertyRef Name="date" />
+            <PropertyRef Name="location" />
+            <PropertyRef Name="event_type" />
+          </Key>
+          <Property Name="Id_event" Type="Int32" Nullable="false" />
+          <Property Name="event_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="location" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="event_type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="participants_count" Type="Int32" />
+        </EntityType>
+        <Association Name="FK__Event__Id_event___412EB0B6">
+          <End Role="Event_type" Type="Self.Event_type" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event_type">
+              <PropertyRef Name="Id_event_type" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="Id_event_type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Event__Id_locati__403A8C7D">
+          <End Role="Location" Type="Self.Location" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="Id_location" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="Id_location" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Feedback__Id_eve__4D94879B">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id_event" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="Id_event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Registrat__Id_ev__48CFD27E">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id_event" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="Id_event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Feedback__Id_par__4E88ABD4">
+          <End Role="Participant" Type="Self.Participant" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participant">
+              <PropertyRef Name="Id_participant" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="Id_participant" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Registrat__Id_pa__49C3F6B7">
+          <End Role="Participant" Type="Self.Participant" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participant">
+              <PropertyRef Name="Id_participant" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="Id_participant" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EV_org">
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <End Role="Organizer" Type="Self.Organizer" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="EventsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Event" EntityType="Self.Event" />
+          <EntitySet Name="Event_type" EntityType="Self.Event_type" />
+          <EntitySet Name="Feedback" EntityType="Self.Feedback" />
+          <EntitySet Name="Location" EntityType="Self.Location" />
+          <EntitySet Name="Organizer" EntityType="Self.Organizer" />
+          <EntitySet Name="Participant" EntityType="Self.Participant" />
+          <EntitySet Name="Registration" EntityType="Self.Registration" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="vw_ActiveParticipants" EntityType="Self.vw_ActiveParticipants" />
+          <EntitySet Name="vw_EventRatings" EntityType="Self.vw_EventRatings" />
+          <EntitySet Name="vw_LowRatedEvents" EntityType="Self.vw_LowRatedEvents" />
+          <EntitySet Name="vw_OrganizersWithEvents" EntityType="Self.vw_OrganizersWithEvents" />
+          <EntitySet Name="vw_UpcomingEventsWithParticipants" EntityType="Self.vw_UpcomingEventsWithParticipants" />
+          <AssociationSet Name="FK__Event__Id_event___412EB0B6" Association="Self.FK__Event__Id_event___412EB0B6">
+            <End Role="Event_type" EntitySet="Event_type" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Event__Id_locati__403A8C7D" Association="Self.FK__Event__Id_locati__403A8C7D">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Feedback__Id_eve__4D94879B" Association="Self.FK__Feedback__Id_eve__4D94879B">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Registrat__Id_ev__48CFD27E" Association="Self.FK__Registrat__Id_ev__48CFD27E">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Feedback__Id_par__4E88ABD4" Association="Self.FK__Feedback__Id_par__4E88ABD4">
+            <End Role="Participant" EntitySet="Participant" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Registrat__Id_pa__49C3F6B7" Association="Self.FK__Registrat__Id_pa__49C3F6B7">
+            <End Role="Participant" EntitySet="Participant" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+          <AssociationSet Name="EV_org" Association="Self.EV_org">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Organizer" EntitySet="Organizer" />
+          </AssociationSet>
+          <FunctionImport Name="sp_AddFeedback">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="ParticipantId" Mode="In" Type="Int32" />
+            <Parameter Name="Rating" Mode="In" Type="Int32" />
+            <Parameter Name="Comment" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_CancelEvent" ReturnType="Collection(String)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="Reason" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GenerateAttendanceReport" ReturnType="Collection(EventsModel.sp_GenerateAttendanceReport_Result)">
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(EventsModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(EventsModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_RegisterParticipant">
+            <Parameter Name="ParticipantId" Mode="In" Type="Int32" />
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchEvents" ReturnType="Collection(EventsModel.sp_SearchEvents_Result)">
+            <Parameter Name="EventTypeId" Mode="In" Type="Int32" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="LocationId" Mode="In" Type="Int32" />
+            <Parameter Name="OrganizerId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+        </EntityContainer>
+        <ComplexType Name="sp_GenerateAttendanceReport_Result">
+          <Property Type="Int32" Name="Id_event" Nullable="false" />
+          <Property Type="String" Name="event_name" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="date" Nullable="false" />
+          <Property Type="String" Name="event_type" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="participants_count" Nullable="true" />
+          <Property Type="Int32" Name="average_rating" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchEvents_Result">
+          <Property Type="Int32" Name="Id_event" Nullable="false" />
+          <Property Type="String" Name="event_name" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="date" Nullable="false" />
+          <Property Type="String" Name="description" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="location" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="event_type" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="organizers" Nullable="true" MaxLength="4000" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище EventsModelContainer" CdmEntityContainer="EventsEntities">
+          <EntitySetMapping Name="Event">
+            <EntityTypeMapping TypeName="EventsModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id_location" ColumnName="Id_location" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="Id_event_type" ColumnName="Id_event_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Event_type">
+            <EntityTypeMapping TypeName="EventsModel.Event_type">
+              <MappingFragment StoreEntitySet="Event_type">
+                <ScalarProperty Name="Id_event_type" ColumnName="Id_event_type" />
+                <ScalarProperty Name="type_name" ColumnName="type_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feedback">
+            <EntityTypeMapping TypeName="EventsModel.Feedback">
+              <MappingFragment StoreEntitySet="Feedback">
+                <ScalarProperty Name="Id_feedback" ColumnName="Id_feedback" />
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="Id_participant" ColumnName="Id_participant" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Location">
+            <EntityTypeMapping TypeName="EventsModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="Id_location" ColumnName="Id_location" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="address" ColumnName="address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Organizer">
+            <EntityTypeMapping TypeName="EventsModel.Organizer">
+              <MappingFragment StoreEntitySet="Organizer">
+                <ScalarProperty Name="Id_organizer" ColumnName="Id_organizer" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="position" ColumnName="position" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Participant">
+            <EntityTypeMapping TypeName="EventsModel.Participant">
+              <MappingFragment StoreEntitySet="Participant">
+                <ScalarProperty Name="Id_participant" ColumnName="Id_participant" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Registration">
+            <EntityTypeMapping TypeName="EventsModel.Registration">
+              <MappingFragment StoreEntitySet="Registration">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="Id_participant" ColumnName="Id_participant" />
+                <ScalarProperty Name="registration_date" ColumnName="registration_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="EventsModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_ActiveParticipants">
+            <EntityTypeMapping TypeName="EventsModel.vw_ActiveParticipants">
+              <MappingFragment StoreEntitySet="vw_ActiveParticipants">
+                <ScalarProperty Name="Id_participant" ColumnName="Id_participant" />
+                <ScalarProperty Name="participant_name" ColumnName="participant_name" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="events_attended" ColumnName="events_attended" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_EventRatings">
+            <EntityTypeMapping TypeName="EventsModel.vw_EventRatings">
+              <MappingFragment StoreEntitySet="vw_EventRatings">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="event_name" ColumnName="event_name" />
+                <ScalarProperty Name="average_rating" ColumnName="average_rating" />
+                <ScalarProperty Name="feedback_count" ColumnName="feedback_count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_LowRatedEvents">
+            <EntityTypeMapping TypeName="EventsModel.vw_LowRatedEvents">
+              <MappingFragment StoreEntitySet="vw_LowRatedEvents">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="event_name" ColumnName="event_name" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="average_rating" ColumnName="average_rating" />
+                <ScalarProperty Name="feedback_count" ColumnName="feedback_count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_OrganizersWithEvents">
+            <EntityTypeMapping TypeName="EventsModel.vw_OrganizersWithEvents">
+              <MappingFragment StoreEntitySet="vw_OrganizersWithEvents">
+                <ScalarProperty Name="Id_organizer" ColumnName="Id_organizer" />
+                <ScalarProperty Name="organizer_name" ColumnName="organizer_name" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="events_count" ColumnName="events_count" />
+                <ScalarProperty Name="event_names" ColumnName="event_names" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_UpcomingEventsWithParticipants">
+            <EntityTypeMapping TypeName="EventsModel.vw_UpcomingEventsWithParticipants">
+              <MappingFragment StoreEntitySet="vw_UpcomingEventsWithParticipants">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="event_name" ColumnName="event_name" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="event_type" ColumnName="event_type" />
+                <ScalarProperty Name="participants_count" ColumnName="participants_count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="EV_org" TypeName="EventsModel.EV_org" StoreEntitySet="EV_org">
+            <EndProperty Name="Event">
+              <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+            </EndProperty>
+            <EndProperty Name="Organizer">
+              <ScalarProperty Name="Id_organizer" ColumnName="Id_organizer" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="sp_AddFeedback" FunctionName="Хранилище EventsModel.sp_AddFeedback" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище EventsModel.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_CancelEvent" FunctionName="Хранилище EventsModel.sp_CancelEvent" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище EventsModel.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище EventsModel.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_GenerateAttendanceReport" FunctionName="Хранилище EventsModel.sp_GenerateAttendanceReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EventsModel.sp_GenerateAttendanceReport_Result">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="event_name" ColumnName="event_name" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="event_type" ColumnName="event_type" />
+                <ScalarProperty Name="participants_count" ColumnName="participants_count" />
+                <ScalarProperty Name="average_rating" ColumnName="average_rating" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище EventsModel.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EventsModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище EventsModel.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EventsModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_RegisterParticipant" FunctionName="Хранилище EventsModel.sp_RegisterParticipant" />
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище EventsModel.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_SearchEvents" FunctionName="Хранилище EventsModel.sp_SearchEvents">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EventsModel.sp_SearchEvents_Result">
+                <ScalarProperty Name="Id_event" ColumnName="Id_event" />
+                <ScalarProperty Name="event_name" ColumnName="event_name" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="event_type" ColumnName="event_type" />
+                <ScalarProperty Name="organizers" ColumnName="organizers" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище EventsModel.sp_upgraddiagrams" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
